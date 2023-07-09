@@ -29,10 +29,13 @@ class SignInScreen extends GetWidget<SignInViewModel> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
-                size: 25.vdp(),
-                Icons.arrow_back,
-                color: Colors.white,
+              GestureDetector(
+                onTap: () => Get.back(),
+                child: Icon(
+                  size: 25.vdp(),
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
               ),
               const VSpace(42),
               Text(
@@ -94,7 +97,7 @@ class SignInScreen extends GetWidget<SignInViewModel> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Get.toNamed("/signup");
+                              Get.offNamed("/signup");
                             },
                         ),
                       ],

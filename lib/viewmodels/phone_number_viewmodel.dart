@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/firebase_service.dart';
+import '../utils/theme/colors.dart';
 
 class SignUpViewModel extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -15,7 +17,7 @@ class SignUpViewModel extends GetxController {
 
   SignUpViewModel(this._firebaseService);
 
-  void submitPhoneNumber() async {
+  Future submitPhoneNumber() async {
     isLoading = true;
     update();
     String phoneNumber = phoneNumberController.text.trim();
@@ -25,20 +27,34 @@ class SignUpViewModel extends GetxController {
       verificationCompleted: (PhoneAuthCredential credential) {
         // Auto-verification logic
         _signInWithCredential(credential);
+        if (isLoading) {
+          isLoading = false;
+          update();
+        }
       },
       verificationFailed: (FirebaseAuthException e) {
+        if (isLoading) {
+          isLoading = false;
+          update();
+        }
         // Handle verification failure
       },
       codeSent: (String verificationId, int? resendToken) {
         this.verificationId = verificationId;
-        update();
+        if (isLoading) {
+          isLoading = false;
+          update();
+        }
         // // Navigate to OTP screen
         // Get.toNamed('/otp', arguments: verificationId);
       },
-      codeAutoRetrievalTimeout: (String verificationId) {},
+      codeAutoRetrievalTimeout: (String verificationId) {
+        if (isLoading) {
+          isLoading = false;
+          update();
+        }
+      },
     );
-    isLoading = false;
-    update();
   }
 
   void _signInWithCredential(PhoneAuthCredential credential) async {
@@ -50,10 +66,17 @@ class SignUpViewModel extends GetxController {
       update();
       // Navigate to home screen
       Get.offNamed('/home');
-    } catch (e) {}
+    } catch (e) {
+      Get.snackbar(
+        "Something went wrong",
+        "Please try again later",
+        backgroundColor: primaryColor,
+        colorText: Colors.white,
+      );
+    }
   }
 
-  void submitOtp(String? otp) async {
+  Future submitOtp(String? otp) async {
     isLoading = true;
     update();
     final otpString = otp ?? otpController.text.trim();
@@ -70,6 +93,12 @@ class SignUpViewModel extends GetxController {
       // Navigate to home screen
       Get.offNamed('/home');
     } catch (e) {
+      Get.snackbar(
+        "Invalid OTP",
+        "Please enter your 6 letter valid OTP",
+        backgroundColor: primaryColor,
+        colorText: Colors.white,
+      );
       isLoading = true;
       update();
     }
