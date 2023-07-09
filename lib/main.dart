@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Phone Authentication',
       theme: ThemeData(primarySwatch: Colors.blue),
       initialRoute: '/',
