@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "984017001499",
+    "project_id": "laundryman-d6acf",
+    "storage_bucket": "laundryman-d6acf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984017001499:android:b1ed9365e1076a8efd2cbe",
+        "android_client_info": {
+          "package_name": "com.example.laundryman"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984017001499-aqg5pdl4j6397a7mfqn7tmrpd16v56cf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.laundryman",
+            "certificate_hash": "3ea641b61f3f1909675fc08a0dc7b33721fdc17f"
+          }
+        },
+        {
+          "client_id": "984017001499-88jo2lgvj1g9jh1n7fhut6vrgmsi952s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKUyARokpa_kbpP2ADd33D08hyMjvAbhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984017001499-88jo2lgvj1g9jh1n7fhut6vrgmsi952s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
