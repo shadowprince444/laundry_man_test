@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:laundryman/utils/screen_utils/size_config.dart';
 import 'package:laundryman/utils/screen_utils/widgets/spacing_widgets.dart';
 import 'package:laundryman/utils/theme/text_themes.dart';
+import 'package:laundryman/viewmodels/home_viewmodel.dart';
 import 'package:laundryman/views/widgets/custom_text_field.dart';
 import 'package:laundryman/views/widgets/primary_button.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -30,10 +31,13 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
-                size: 25.vdp(),
-                Icons.arrow_back,
-                color: Colors.white,
+              GestureDetector(
+                onTap: () => Get.back(),
+                child: Icon(
+                  size: 25.vdp(),
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
               ),
               const VSpace(42),
               Text(
@@ -67,20 +71,67 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
                         onCodeSubmitted: (code) {
                           signUpModel.submitOtp(code);
                         },
-                        onCodeChanged: (code) {
+                        onCodeChanged: (code) async {
                           if (code!.length == 6) {
                             FocusScope.of(context).requestFocus(FocusNode());
-                            signUpModel.submitOtp(code);
+                            await signUpModel.submitOtp(code);
                           }
                         },
                       ),
                       const VSpace(36),
-                      PrimaryButton(
-                          labelText: "Verify OTP",
-                          onTap: () {
-                            controller.submitPhoneNumber();
-                          }),
                     ],
+                  );
+                }
+              }),
+              GetBuilder<SignUpViewModel>(builder: (signUpViewModel) {
+                if (signUpViewModel.isLoading) {
+                  return const VSpace(0);
+                }
+                if (signUpViewModel.verificationId == null) {
+                  return Center(
+                    child: PrimaryButton(
+                        labelText: "Next",
+                        onTap: () {
+                          if (controller.nameController.text.isEmpty) {
+                            Get.snackbar(
+                              "Invald name",
+                              "Please enter your full name",
+                              backgroundColor: primaryColor,
+                              colorText: Colors.white,
+                            );
+                          } else {
+                            if (controller.phoneNumberController.text.length ==
+                                    13 &&
+                                controller.phoneNumberController.text
+                                    .contains("+91")) {
+                              controller.submitPhoneNumber();
+                            } else {
+                              Get.snackbar(
+                                "Invalid Mobile number",
+                                "Please enter your country code as well",
+                                backgroundColor: primaryColor,
+                                colorText: Colors.white,
+                              );
+                            }
+                          }
+                        }),
+                  );
+                } else {
+                  return Center(
+                    child: PrimaryButton(
+                        labelText: "Verify OTP",
+                        onTap: () async {
+                          if (controller.nameController.text.length == 6) {
+                            await controller.submitOtp(null);
+                          } else {
+                            Get.snackbar(
+                              "Invalid OTP",
+                              "Please enter your 6 letter OTP",
+                              backgroundColor: primaryColor,
+                              colorText: Colors.white,
+                            );
+                          }
+                        }),
                   );
                 }
               }),
@@ -108,7 +159,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Get.back();
+                              Get.offNamed("/signin");
                             },
                         ),
                       ],
@@ -138,11 +189,11 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
           labelText: 'Mobile Number',
         ),
         const VSpace(36),
-        PrimaryButton(
-            labelText: "Next",
-            onTap: () {
-              controller.submitPhoneNumber();
-            }),
+        // PrimaryButton(
+        //     labelText: "Next",
+        //     onTap: () {
+        //       controller.submitPhoneNumber();
+        //     }),
       ],
     );
   }
